@@ -177,12 +177,15 @@ void decode_encode1()
 
         av_frame_unref(frame);
 
+        const AVStream *in_stream = decoder.getVideoStream();
+        const AVStream *out_stream = encoder.getVideoStream();
         for (int64_t i = 0; i < decoder.GetNumberVideoFrame(); i++)
         {
             frame = decoder.readVideoFrame();
             if (frame != nullptr)
             {
-                frame->pts = i; // Set presentation timestamp to current
+                //frame->pts = i; // Set presentation timestamp to current
+                av_rescale_q(frame->pts, in_stream->time_base, out_stream->time_base);
                 encoder.writeVideoFrame(frame);
             }
         }

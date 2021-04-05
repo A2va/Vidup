@@ -323,12 +323,10 @@ int FFmpegDecoder::readPacketonStream(AVCodecContext *codec_ctx, AVStream *strea
 	int ret;
 	// Free buffer in packet if there is one
 	av_packet_unref(pkt);
-	//Apparently the last packet in stream is useless
-	// so ignore it
-	if (fifo_packet_[stream->index].size() > 1)
+	if (fifo_packet_[stream->index].size() > 0)
 	{
 		AVPacket *front_pkt = fifo_packet_[stream->index].front();
-		//Move the data reference of front_pkt
+		// Move the data reference of front_pkt
 		// to pkt and reset front_pkt (av_packet_unref)
 		av_packet_move_ref(pkt, front_pkt);
 		// Free front_packet

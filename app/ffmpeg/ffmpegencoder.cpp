@@ -207,25 +207,7 @@ bool FFmpegEncoder::InitializeStream(AVMediaType type, AVStream **stream_ptr, AV
 
 	if (type == AVMEDIA_TYPE_VIDEO)
 	{
-	// 	codec_ctx->bit_rate = 4374718;
-	// 	/* resolution must be a multiple of two */
-	// 	codec_ctx->width = 1920;
-	// 	codec_ctx->height = 1080;
-	// 	/* frames per second */
-	// 	codec_ctx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
-	// 	codec_ctx->time_base = (AVRational){1, 25};
-	// 	codec_ctx->framerate = (AVRational){25, 1};
-	// 	/* emit one intra frame every ten frames
-    //  * check frame pict_type before passing frame
-    //  * to encoder, if frame->pict_type is AV_PICTURE_TYPE_I
-    //  * then gop_size is ignored and the output of encoder
-    //  * will always be I frame irrespective to gop_size
-    //  */
-	// 	// c->gop_size = 10;
-	// 	// c->max_b_frames = 1;
-	// 	codec_ctx->pix_fmt = AV_PIX_FMT_YUV420P;
-	// 	//c->global_quality = 10;
-
+		// codec_ctx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 		codec_ctx->width = 1920;
 		codec_ctx->height = 1080;
 		codec_ctx->bit_rate = 4374718;

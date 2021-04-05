@@ -43,6 +43,7 @@ int main(int argc, char **argv)
     decode_image1();
     decode_image2();
 
+    decode_encode1();
     decode_encode2();
     
     QApplication test(argc, argv);
