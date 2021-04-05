@@ -18,8 +18,8 @@
 
 extern "C"
 {
-	#include <libavutil/rational.h>
-	#include <libavutil/imgutils.h>
+#include <libavutil/rational.h>
+#include <libavutil/imgutils.h>
 }
 
 FFmpegEncoder::FFmpegEncoder(std::string filename)
@@ -27,30 +27,22 @@ FFmpegEncoder::FFmpegEncoder(std::string filename)
 	InitPtr();
 	filename_ = filename;
 	open_ = false;
-	//AV_CODEC_ID_H264
-	//AV_CODEC_ID_MPEG2VIDEO
-	video_codec_ = avcodec_find_encoder(AV_CODEC_ID_H264);
-	if (!video_codec_)
-	{
-		throw FFmpegError("Encoder: Codec not found");
-	}
-	audio_codec_ = avcodec_find_encoder(AV_CODEC_ID_AAC);
-	if (!audio_codec_)
-	{
-		throw FFmpegError("Encoder: Codec not found");
-	}
 }
 
-FFmpegEncoder::FFmpegEncoder(std::string filename, enum AVCodecID codec_id)
+FFmpegEncoder::FFmpegEncoder(std::string filename, CodecParam codec_param)
 {
 	InitPtr();
-	video_codec_ = avcodec_find_encoder(codec_id);
-	if (!video_codec_)
-	{
-		throw FFmpegError("Encoder: Codec not found");
-	}
+	codec_param_ = codec_param;
+
+	InitializeCodec();
 
 	open_ = false;
+}
+
+void FFmpegEncoder::SetCodecParam(CodecParam codec_param)
+{
+	codec_param_ = codec_param;
+	InitializeCodec();
 }
 
 bool FFmpegEncoder::Open()
@@ -68,11 +60,15 @@ bool FFmpegEncoder::Open()
 		return false;
 	}
 
-	//InitializeVideoStream();
-	InitializeStream(AVMEDIA_TYPE_VIDEO, &video_stream_, &video_codec_ctx_, video_codec_);
-
-	InitializeStream(AVMEDIA_TYPE_AUDIO, &audio_stream_, &audio_codec_ctx_, audio_codec_);
-
+	if(video_codec_!=nullptr)
+	{
+		InitializeStream(AVMEDIA_TYPE_VIDEO, &video_stream_, &video_codec_ctx_, video_codec_);
+	}
+	if(audio_codec_!=nullptr)
+	{
+		InitializeStream(AVMEDIA_TYPE_AUDIO, &audio_stream_, &audio_codec_ctx_, audio_codec_);
+	}
+	
 	// Open output file for writing
 	error_code = avio_open(&fmt_ctx_->pb, filename_.c_str(), AVIO_FLAG_WRITE);
 	if (error_code < 0)
@@ -104,7 +100,6 @@ bool FFmpegEncoder::Open()
 
 	open_ = true;
 	return true;
-
 }
 
 const AVStream *FFmpegEncoder::getVideoStream()
@@ -119,7 +114,7 @@ void FFmpegEncoder::writeAudioFrame(AVFrame *frame)
 
 void FFmpegEncoder::writeAudioPacket(AVPacket *pkt)
 {
-	writePktonStream(audio_codec_ctx_,audio_stream_,pkt);
+	writePktonStream(audio_codec_ctx_, audio_stream_, pkt);
 }
 
 void FFmpegEncoder::writeVideoFrame(AVFrame *frame)
@@ -129,10 +124,10 @@ void FFmpegEncoder::writeVideoFrame(AVFrame *frame)
 
 void FFmpegEncoder::writeVideoPacket(AVPacket *pkt)
 {
-	writePktonStream(video_codec_ctx_,video_stream_,pkt);
+	writePktonStream(video_codec_ctx_, video_stream_, pkt);
 }
 
-void FFmpegEncoder::writeMatrix(cv::Mat &image,int64_t  pts)
+void FFmpegEncoder::writeMatrix(cv::Mat &image, int64_t pts)
 {
 	frame_->format = static_cast<AVPixelFormat>(video_stream_->codecpar->format);
 	frame_->width = video_stream_->codecpar->width;
@@ -145,8 +140,8 @@ void FFmpegEncoder::writeMatrix(cv::Mat &image,int64_t  pts)
 		return;
 	}
 
-	Matrix2Frame(image,frame_);
-	frame_->pts= pts; 
+	Matrix2Frame(image, frame_);
+	frame_->pts = pts;
 	writeVideoFrame(frame_);
 	av_frame_unref(frame_);
 }
@@ -218,7 +213,7 @@ bool FFmpegEncoder::InitializeStream(AVMediaType type, AVStream **stream_ptr, AV
 
 		codec_ctx->pix_fmt = AV_PIX_FMT_YUV420P;
 	}
-	else if(type == AVMEDIA_TYPE_AUDIO)
+	else if (type == AVMEDIA_TYPE_AUDIO)
 	{
 		codec_ctx->sample_rate = 48000;
 		codec_ctx->channel_layout = 3;
@@ -227,12 +222,32 @@ bool FFmpegEncoder::InitializeStream(AVMediaType type, AVStream **stream_ptr, AV
 		codec_ctx->time_base = {1, codec_ctx->sample_rate};
 	}
 
-
 	if (!SetupCodecContext(stream, codec_ctx, codec_ptr))
 	{
 		return false;
 	}
 	return false;
+}
+
+void FFmpegEncoder::InitializeCodec()
+{
+	if (codec_param_.video_codec_id() != AV_CODEC_ID_NONE)
+	{
+		video_codec_ = avcodec_find_encoder(codec_param_.video_codec_id());
+		if (!video_codec_)
+		{
+			throw FFmpegError("Encoder: Codec not found");
+		}
+	}
+
+	if (codec_param_.audio_codec_id() != AV_CODEC_ID_NONE)
+	{
+		audio_codec_ = avcodec_find_encoder(codec_param_.audio_codec_id());
+		if (!audio_codec_)
+		{
+			throw FFmpegError("Encoder: Codec not found");
+		}
+	}
 }
 
 bool FFmpegEncoder::InitializeCodecContext(AVStream **stream, AVCodecContext **codec_ctx, AVCodec *codec)
@@ -330,8 +345,7 @@ void FFmpegEncoder::Close()
 	}
 }
 
-
-void FFmpegEncoder::writePktonStream(AVCodecContext *codec_ctx,AVStream *stream,AVPacket *pkt)
+void FFmpegEncoder::writePktonStream(AVCodecContext *codec_ctx, AVStream *stream, AVPacket *pkt)
 {
 	pkt_->stream_index = stream->index;
 
@@ -339,7 +353,6 @@ void FFmpegEncoder::writePktonStream(AVCodecContext *codec_ctx,AVStream *stream,
 
 	// Write packet to file
 	av_interleaved_write_frame(fmt_ctx_, pkt_);
-
 }
 
 bool FFmpegEncoder::encode(AVCodecContext *codec_ctx, AVStream *stream, AVFrame *frame)
@@ -367,8 +380,8 @@ bool FFmpegEncoder::encode(AVCodecContext *codec_ctx, AVStream *stream, AVFrame 
 			throw FFmpegError("Encoder.encode: Error during encoding", error_code);
 		}
 
-		writePktonStream(codec_ctx,stream,pkt_);
-		
+		writePktonStream(codec_ctx, stream, pkt_);
+
 		// Unref packet in case we're getting another
 		av_packet_unref(pkt_);
 	}

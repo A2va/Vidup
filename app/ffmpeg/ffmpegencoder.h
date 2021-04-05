@@ -31,12 +31,17 @@ extern "C"
 #include <QString>
 #include <QDebug>
 
+#include "codecparam.h"
+
 class FFmpegEncoder
 {
 public:
   FFmpegEncoder(std::string filename);
-  FFmpegEncoder(std::string filename, enum AVCodecID codec_id);
+  FFmpegEncoder(std::string filename, CodecParam codec_param);
   ~FFmpegEncoder();
+
+  // Call this method before open or use the second constructor 
+  void SetCodecParam(CodecParam codec_param);
 
   bool Open();
   void Close();
@@ -66,6 +71,7 @@ private:
   bool InitializeCodecContext(AVStream **stream, AVCodecContext **codec_ctx, AVCodec *codec);
 
   void InitPtr();
+  void InitializeCodec();
 
   AVFormatContext *fmt_ctx_;
 
@@ -85,6 +91,8 @@ private:
   std::string filename_;
 
   bool open_;
+
+  CodecParam codec_param_;
 };
 
 #endif
