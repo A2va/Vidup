@@ -35,19 +35,22 @@ if(WIN32)
 endif()
 
 set(SOURCES
-       app/main.cpp
-       app/ffmpeg_tests.cpp
-       app/ffmpeg_tests.h
-       app/ffmpeg/ffmpegerror.h
-       app/ffmpeg/ffmpegerror.cpp
-       app/ffmpeg/ffmpegencoder.cpp
-       app/ffmpeg/ffmpegencoder.h
-       app/ffmpeg/ffmpegdecoder.cpp
-       app/ffmpeg/ffmpegdecoder.h
+      app/main.cpp
+      app/ffmpeg_tests.cpp
+      app/ffmpeg_tests.h
 
-       app/mainwindow.cpp
-       app/mainwindow.h
-       app/mainwindow.ui
+      app/mainwindow.cpp
+      app/mainwindow.h
+      app/mainwindow.ui
+
+      app/ffmpeg/codecparam.cpp
+      app/ffmpeg/codecparam.h
+      app/ffmpeg/ffmpegerror.cpp
+      app/ffmpeg/ffmpegerror.h
+      app/ffmpeg/ffmpegencoder.cpp
+      app/ffmpeg/ffmpegencoder.h
+      app/ffmpeg/ffmpegdecoder.cpp
+      app/ffmpeg/ffmpegdecoder.h
 )
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
