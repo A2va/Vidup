@@ -18,7 +18,7 @@ void CodecParam::framerate(AVRational framerate)
 }
 void CodecParam::pix_fmt(AVPixelFormat pix_fmt)
 {
-    pix_fmt = pix_fmt;
+    pix_fmt_ =  pix_fmt;
 }
 void CodecParam::bit_rate(int64_t bit_rate)
 {
