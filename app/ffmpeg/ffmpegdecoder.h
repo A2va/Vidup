@@ -34,6 +34,8 @@ extern "C"
 
 #include <queue>
 
+#include "codecparam.h"
+
 class FFmpegDecoder
 {
 public:

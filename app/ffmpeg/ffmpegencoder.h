@@ -37,11 +37,11 @@ class FFmpegEncoder
 {
 public:
   FFmpegEncoder(std::string filename);
-  FFmpegEncoder(std::string filename, CodecParam codec_param);
+  FFmpegEncoder(std::string filename, CodecParam &codec_param);
   ~FFmpegEncoder();
 
   // Call this method before open or use the second constructor 
-  void SetCodecParam(CodecParam codec_param);
+  void SetCodecParam(CodecParam &codec_param);
 
   bool Open();
   void Close();

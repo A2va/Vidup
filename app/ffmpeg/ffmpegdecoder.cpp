@@ -16,7 +16,6 @@
 
 #include "ffmpegdecoder.h"
 #include "ffmpegerror.h"
-#include "codecparam.h"
 
 extern "C"
 {
@@ -35,9 +34,9 @@ CodecParam FFmpegDecoder::GetCodecParam()
 {
 	CodecParam codec_param;
 
-	if (video_codec_ctx != nullptr)
+	if (video_codec_ctx_ != nullptr)
 	{
-		codec_param.width(video_codec_ctx->width);
+		codec_param.width(video_codec_ctx_->width);
 		codec_param.height(video_codec_ctx_->height);
 		codec_param.framerate(video_codec_ctx_->framerate);
 		codec_param.time_base(video_codec_ctx_->time_base);
