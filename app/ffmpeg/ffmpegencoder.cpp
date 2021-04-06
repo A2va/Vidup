@@ -24,19 +24,13 @@ extern "C"
 
 FFmpegEncoder::FFmpegEncoder(std::string filename)
 {
-	InitPtr();
 	filename_ = filename;
-	open_ = false;
 }
 
 FFmpegEncoder::FFmpegEncoder(std::string filename, CodecParam &codec_param)
 {
-	InitPtr();
 	codec_param_ = codec_param;
-
 	InitializeCodec();
-
-	open_ = false;
 }
 
 void FFmpegEncoder::SetCodecParam(CodecParam &codec_param)
@@ -402,23 +396,4 @@ bool FFmpegEncoder::encode(AVCodecContext *codec_ctx, AVStream *stream, AVFrame 
 FFmpegEncoder::~FFmpegEncoder()
 {
 	Close();
-}
-
-void FFmpegEncoder::InitPtr()
-{
-	fmt_ctx_ = nullptr;
-
-	video_codec_ctx_ = nullptr;
-	audio_codec_ctx_ = nullptr;
-
-	video_codec_ = nullptr;
-	audio_codec_ = nullptr;
-
-	video_stream_ = nullptr;
-	audio_stream_ = nullptr;
-
-	sws_ctx_ = nullptr;
-
-	frame_ = nullptr;
-	pkt_ = nullptr;
 }

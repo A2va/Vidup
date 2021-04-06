@@ -67,27 +67,26 @@ private:
   bool SetupCodecContext(AVStream *stream, AVCodecContext *codec_ctx, AVCodec *codec);
   bool InitializeCodecContext(AVStream **stream, AVCodecContext **codec_ctx, AVCodec *codec);
 
-  void InitPtr();
   void InitializeCodec();
 
-  AVFormatContext *fmt_ctx_;
+  AVFormatContext *fmt_ctx_=nullptr;
 
-  AVStream *video_stream_;
-  AVCodec *video_codec_;
-  AVCodecContext *video_codec_ctx_;
+  AVStream *video_stream_=nullptr;
+  AVCodec *video_codec_=nullptr;
+  AVCodecContext *video_codec_ctx_=nullptr;
 
-  AVStream *audio_stream_;
-  AVCodec *audio_codec_;
-  AVCodecContext *audio_codec_ctx_;
+  AVStream *audio_stream_=nullptr;
+  AVCodec *audio_codec_=nullptr;
+  AVCodecContext *audio_codec_ctx_=nullptr;
 
-  AVFrame *frame_;
-  AVPacket *pkt_;
+  AVFrame *frame_=nullptr;
+  AVPacket *pkt_=nullptr;
 
-  struct SwsContext *sws_ctx_;
+  struct SwsContext *sws_ctx_=nullptr;
 
   std::string filename_;
 
-  bool open_;
+  bool open_=false;
 
   CodecParam codec_param_;
 };
