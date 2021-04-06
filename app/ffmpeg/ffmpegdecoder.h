@@ -82,35 +82,34 @@ public:
   const AVStream * getVideoStream();
 
 private:
-  void InitPtr();
 
   int readPacketonStream(AVCodecContext *codec_ctx, AVStream *stream, AVPacket *pkt);
 
   bool InitCodecContext(AVStream *stream, AVCodec **codec, AVCodecContext **codec_ctx);
   int decode(AVCodecContext *codec_ctx, AVStream *stream, AVFrame *frame);
 
-  AVFormatContext *fmt_ctx_;
-  AVStream *video_stream_;
-  AVCodec *video_codec_;
-  AVCodecContext *video_codec_ctx_;
+  AVFormatContext *fmt_ctx_=nullptr;
+  AVStream *video_stream_=nullptr;
+  AVCodec *video_codec_=nullptr;
+  AVCodecContext *video_codec_ctx_=nullptr;
 
-  AVStream *audio_stream_;
-  AVCodec *audio_codec_;
-  AVCodecContext *audio_codec_ctx_;
+  AVStream *audio_stream_=nullptr;
+  AVCodec *audio_codec_=nullptr;
+  AVCodecContext *audio_codec_ctx_=nullptr;
 
-  AVFrame *frame_;
-  AVPacket *pkt_;
+  AVFrame *frame_=nullptr;
+  AVPacket *pkt_=nullptr;
 
-  struct SwsContext *sws_ctx_;
+  struct SwsContext *sws_ctx_=nullptr;
 
   std::string filename_;
 
   std::queue<AVPacket*> fifo_packet_[2];
   
-  bool find_video_;
-  bool find_audio_;
+  bool find_video_=false;
+  bool find_audio_=false;
 
-  bool open_;
+  bool open_=false;
 };
 
 #endif

@@ -25,8 +25,6 @@ extern "C"
 
 FFmpegDecoder::FFmpegDecoder(std::string filename)
 {
-	InitPtr();
-	open_ = false;
 	filename_ = filename;
 }
 
@@ -227,6 +225,7 @@ void FFmpegDecoder::Close()
 		avformat_free_context(fmt_ctx_);
 		fmt_ctx_ = nullptr;
 	}
+	open_=false;
 }
 const AVStream *FFmpegDecoder::getVideoStream()
 {
@@ -465,26 +464,6 @@ bool FFmpegDecoder::InitCodecContext(AVStream *stream, AVCodec **codec, AVCodecC
 		return false;
 	}
 	return true;
-}
-
-void FFmpegDecoder::InitPtr()
-{
-	// Set all pointer to nullptr
-	fmt_ctx_ = nullptr;
-
-	video_codec_ctx_ = nullptr;
-	audio_codec_ctx_ = nullptr;
-
-	video_codec_ = nullptr;
-	audio_codec_ = nullptr;
-
-	video_stream_ = nullptr;
-	audio_stream_ = nullptr;
-
-	sws_ctx_ = nullptr;
-
-	frame_ = nullptr;
-	pkt_ = nullptr;
 }
 
 FFmpegDecoder::~FFmpegDecoder()
