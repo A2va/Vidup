@@ -28,9 +28,6 @@ extern "C"
 #include <opencv2/opencv.hpp>
 #include <string>
 
-#include <QString>
-#include <QDebug>
-
 #include "codecparam.h"
 
 class FFmpegEncoder

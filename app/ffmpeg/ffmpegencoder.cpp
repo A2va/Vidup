@@ -205,7 +205,7 @@ bool FFmpegEncoder::InitializeStream(AVMediaType type, AVStream **stream_ptr, AV
 	case AVMEDIA_TYPE_VIDEO:
 		// codec_ctx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 		// codec_ctx->time_base = av_make_q(1,25);
-		// codec_ctx->framerate = av_make_q(25,1);¨
+		// codec_ctx->framerate = av_make_q(25,1);
 
 		codec_ctx->width = codec_param_.width();
 		codec_ctx->height = codec_param_.height();
@@ -282,11 +282,18 @@ bool FFmpegEncoder::SetupCodecContext(AVStream *stream, AVCodecContext *codec_ct
 	{
 		codec_ctx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 	}
-
+	
 	AVDictionary *codec_opts = nullptr;
-
+	if(codec_param_.thread()==0)
+	{
+		av_dict_set(&codec_opts, "threads", "auto", 0);
+	}
+	else
+	{
+    	av_dict_set(&codec_opts, "threads", std::to_string(codec_param_.thread()).c_str(), 0);
+	}
 	// Try to open encoder
-	error_code = avcodec_open2(codec_ctx, codec, nullptr);
+	error_code = avcodec_open2(codec_ctx, codec, &codec_opts);
 	if (error_code < 0)
 	{
 		throw FFmpegError("Encoder.SetupCodecContext: Failed to open encoder", error_code);

@@ -46,6 +46,10 @@ void CodecParam::audio_codec_id(enum AVCodecID codec_id)
     audio_codec_id_ = codec_id;
 }
 
+void CodecParam::thread(int thread)
+{
+    thread_ = thread;
+}
 
 int CodecParam::width()
 {
@@ -91,4 +95,9 @@ AVSampleFormat CodecParam::sample_fmt()
 enum AVCodecID CodecParam::audio_codec_id()
 {
     return audio_codec_id_;
+}
+
+int CodecParam::thread()
+{
+    return thread_;
 }

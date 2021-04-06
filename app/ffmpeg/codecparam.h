@@ -44,6 +44,10 @@ uint64_t channel_layout();
 AVSampleFormat sample_fmt();
 enum AVCodecID audio_codec_id();
 
+int thread();
+void thread(int thread);
+
+
 private:
     // Video parameters
     int width_;
@@ -60,6 +64,7 @@ private:
     AVSampleFormat sample_fmt_;
     enum AVCodecID audio_codec_id_;
 
+    int thread_=0;
 };
 
 #endif
