@@ -29,7 +29,7 @@ FFmpegEncoder::FFmpegEncoder(std::string filename)
 	open_ = false;
 }
 
-FFmpegEncoder::FFmpegEncoder(std::string filename, CodecParam codec_param)
+FFmpegEncoder::FFmpegEncoder(std::string filename, CodecParam &codec_param)
 {
 	InitPtr();
 	codec_param_ = codec_param;
@@ -39,7 +39,7 @@ FFmpegEncoder::FFmpegEncoder(std::string filename, CodecParam codec_param)
 	open_ = false;
 }
 
-void FFmpegEncoder::SetCodecParam(CodecParam codec_param)
+void FFmpegEncoder::SetCodecParam(CodecParam &codec_param)
 {
 	codec_param_ = codec_param;
 	InitializeCodec();
@@ -60,15 +60,15 @@ bool FFmpegEncoder::Open()
 		return false;
 	}
 
-	if(video_codec_!=nullptr)
+	if (video_codec_ != nullptr)
 	{
 		InitializeStream(AVMEDIA_TYPE_VIDEO, &video_stream_, &video_codec_ctx_, video_codec_);
 	}
-	if(audio_codec_!=nullptr)
+	if (audio_codec_ != nullptr)
 	{
 		InitializeStream(AVMEDIA_TYPE_AUDIO, &audio_stream_, &audio_codec_ctx_, audio_codec_);
 	}
-	
+
 	// Open output file for writing
 	error_code = avio_open(&fmt_ctx_->pb, filename_.c_str(), AVIO_FLAG_WRITE);
 	if (error_code < 0)
@@ -200,26 +200,30 @@ bool FFmpegEncoder::InitializeStream(AVMediaType type, AVStream **stream_ptr, AV
 	AVCodecContext *codec_ctx = *codec_ctx_ptr;
 	AVStream *stream = *stream_ptr;
 
-	if (type == AVMEDIA_TYPE_VIDEO)
+	switch (type)
 	{
+	case AVMEDIA_TYPE_VIDEO:
 		// codec_ctx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
-		codec_ctx->width = 1920;
-		codec_ctx->height = 1080;
-		codec_ctx->bit_rate = 4374718;
 		// codec_ctx->time_base = av_make_q(1,25);
-		// codec_ctx->framerate = av_make_q(25,1);
-		codec_ctx->time_base = (AVRational){1, 25};
-		codec_ctx->framerate = (AVRational){25, 1};
+		// codec_ctx->framerate = av_make_q(25,1);¨
 
-		codec_ctx->pix_fmt = AV_PIX_FMT_YUV420P;
-	}
-	else if (type == AVMEDIA_TYPE_AUDIO)
-	{
-		codec_ctx->sample_rate = 48000;
-		codec_ctx->channel_layout = 3;
+		codec_ctx->width = codec_param_.width();
+		codec_ctx->height = codec_param_.height();
+		codec_ctx->bit_rate = codec_param_.bit_rate();
+		codec_ctx->time_base = codec_param_.time_base();
+		codec_ctx->framerate = codec_param_.framerate();
+		codec_ctx->pix_fmt = codec_param_.pix_fmt();
+		break;
+
+	case AVMEDIA_TYPE_AUDIO:
+		codec_ctx->sample_rate = codec_param_.sample_rate();
+		codec_ctx->channel_layout = codec_param_.channel_layout();
 		codec_ctx->channels = av_get_channel_layout_nb_channels(codec_ctx->channel_layout);
-		codec_ctx->sample_fmt = AV_SAMPLE_FMT_FLTP;
-		codec_ctx->time_base = {1, codec_ctx->sample_rate};
+		codec_ctx->sample_fmt = codec_param_.sample_fmt();
+		codec_ctx->time_base = av_make_q(1, codec_param_.sample_rate());
+		break;
+	default:
+		break;
 	}
 
 	if (!SetupCodecContext(stream, codec_ctx, codec_ptr))
