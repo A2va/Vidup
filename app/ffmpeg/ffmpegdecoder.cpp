@@ -16,6 +16,7 @@
 
 #include "ffmpegdecoder.h"
 #include "ffmpegerror.h"
+#include "codecparam.h"
 
 extern "C"
 {
@@ -28,6 +29,40 @@ FFmpegDecoder::FFmpegDecoder(std::string filename)
 	InitPtr();
 	open_ = false;
 	filename_ = filename;
+}
+
+CodecParam FFmpegDecoder::GetCodecParam()
+{
+	CodecParam codec_param;
+
+	if (video_codec_ctx != nullptr)
+	{
+		codec_param.width(video_codec_ctx->width);
+		codec_param.height(video_codec_ctx_->height);
+		codec_param.framerate(video_codec_ctx_->framerate);
+		codec_param.time_base(video_codec_ctx_->time_base);
+		codec_param.pix_fmt(video_codec_ctx_->pix_fmt);
+		codec_param.bit_rate(video_codec_ctx_->bit_rate);
+		codec_param.video_codec_id(video_codec_ctx_->codec_id);
+	}
+	else
+	{
+		codec_param.video_codec_id(AV_CODEC_ID_NONE);
+	}
+
+	if(audio_codec_ctx_!= nullptr)
+	{
+		codec_param.sample_rate(audio_codec_ctx_->sample_rate);
+		codec_param.channel_layout(audio_codec_ctx_->channel_layout);
+		codec_param.sample_fmt(audio_codec_ctx_->sample_fmt);
+		codec_param.audio_codec_id(audio_codec_ctx_->codec_id);
+	}
+	else
+	{
+		codec_param.audio_codec_id(AV_CODEC_ID_NONE);
+	}
+
+	return codec_param;
 }
 
 bool FFmpegDecoder::Open()
@@ -233,9 +268,9 @@ void FFmpegDecoder::readVideoFrame(AVFrame *frame)
 		return;
 	}
 	int ret = decode(video_codec_ctx_, video_stream_, frame);
-	if(ret <0)
+	if (ret < 0)
 	{
-		frame= nullptr;
+		frame = nullptr;
 	}
 }
 
@@ -255,7 +290,7 @@ void FFmpegDecoder::readAudioFrame(AVFrame *frame)
 		return;
 	}
 	int ret = decode(audio_codec_ctx_, audio_stream_, frame);
-	if(ret <0)
+	if (ret < 0)
 	{
 		frame = nullptr;
 	}
@@ -278,7 +313,7 @@ AVFrame *FFmpegDecoder::readVideoFrame()
 		return nullptr;
 	}
 	int ret = decode(video_codec_ctx_, video_stream_, frame_);
-	if(ret <0)
+	if (ret < 0)
 	{
 		return nullptr;
 	}
@@ -310,8 +345,8 @@ AVFrame *FFmpegDecoder::readAudioFrame()
 		return nullptr;
 	}
 
-	int ret =decode(audio_codec_ctx_, audio_stream_, frame_);
-	if(ret < 0)
+	int ret = decode(audio_codec_ctx_, audio_stream_, frame_);
+	if (ret < 0)
 	{
 		return nullptr;
 	}
