@@ -22,6 +22,8 @@
 
 #include "ffmpeg/ffmpegerror.h"
 
+#include "ffmpeg/codecparam.h"
+
 extern "C"
 {
     #include <libavutil/rational.h>
@@ -35,6 +37,18 @@ void encode_image1()
     try
     {
         FFmpegEncoder encoder(filename);
+        CodecParam codec_param;
+        codec_param.video_codec_id(AV_CODEC_ID_H264);
+        codec_param.width(1920);
+        codec_param.height(1080);
+        codec_param.bit_rate(400000);
+        codec_param.time_base(av_make_q(1,25));
+        codec_param.framerate(av_make_q(25,1));
+        codec_param.pix_fmt(AV_PIX_FMT_YUV420P);
+
+        codec_param.audio_codec_id(AV_CODEC_ID_NONE); // With this codec id the encoder doesn't create a audio stream
+
+        encoder.SetCodecParam(codec_param);
         encoder.Open();
         encoder.InitSwsContext();
 
@@ -44,7 +58,6 @@ void encode_image1()
         encoder.Matrix2Frame(image, frame);
 
         // Encode 4 second of video at 25 fps
-        // For the moment Fps is hard coded InitializeStream method of encoder
         for (int i = 0; i < 100; i++)
         {
             frame->pts = i;
@@ -71,13 +84,25 @@ void encode_image2()
     {
         FFmpegEncoder encoder(filename);
 
+        CodecParam codec_param;
+        codec_param.video_codec_id(AV_CODEC_ID_H264);
+        codec_param.width(1920);
+        codec_param.height(1080);
+        codec_param.bit_rate(400000);
+        codec_param.time_base(av_make_q(1,25));
+        codec_param.framerate(av_make_q(25,1));
+        codec_param.pix_fmt(AV_PIX_FMT_YUV420P);
+
+        codec_param.audio_codec_id(AV_CODEC_ID_NONE); // With this codec id the encoder doesn't create a audio stream
+
+        encoder.SetCodecParam(codec_param);
+
         encoder.Open();
         encoder.InitSwsContext();
 
         cv::Mat image = cv::imread("./tests/encode_image.png");
 
         // Encode 4 second of video at 25 fps
-        // For the moment Fps is hard coded InitializeStream method of encoder
         for (int i = 0; i < 100; i++)
         {
             encoder.writeMatrix(image, i);
@@ -156,13 +181,19 @@ void decode_encode1()
     try
     {
         FFmpegEncoder encoder(filename_out);
-
-        encoder.Open();
-        encoder.InitSwsContext();
-
         FFmpegDecoder decoder(filename);
 
         decoder.Open();
+        CodecParam codec_param= decoder.GetCodecParam();
+        // Apparently the encoder needs different framerate and time base than the decoder 
+        // See this: https://gist.github.com/yohhoy/50ea5fe868a2b3695e19
+        codec_param.time_base(av_make_q(1,25));
+        codec_param.framerate(av_make_q(25,1));
+
+        encoder.SetCodecParam(codec_param);
+        encoder.Open();
+        encoder.InitSwsContext();
+
         decoder.InitSwsContext();
         AVFrame *frame;
 
@@ -184,8 +215,8 @@ void decode_encode1()
             frame = decoder.readVideoFrame();
             if (frame != nullptr)
             {
-                //frame->pts = i; // Set presentation timestamp to current
-                av_rescale_q(frame->pts, in_stream->time_base, out_stream->time_base);
+                frame->pts = i; // Set presentation timestamp to current
+                //av_rescale_q(frame->pts, in_stream->time_base, out_stream->time_base);
                 encoder.writeVideoFrame(frame);
             }
         }
@@ -198,25 +229,29 @@ void decode_encode1()
         std::cerr << e.message() << std::endl;
     }
 
-    std::cout << "Test: End Decode encode" << std::endl;
+    std::cout << "Test: End Decode encode 1" << std::endl;
 }
 
 void decode_encode2()
 {
     std::string filename = "./tests/decode_encode.mp4";
     std::string filename_out = "./tests/decode_encode_out2.mp4";
-
+    // Same test as decode_encode1 but with packet (not working at the moment)
     std::cout << "Test: Decode encode 2" << std::endl;
     try
     {
         FFmpegEncoder encoder(filename_out);
-
-        encoder.Open();
-        encoder.InitSwsContext();
-
         FFmpegDecoder decoder(filename);
 
         decoder.Open();
+        CodecParam codec_param= decoder.GetCodecParam();
+        codec_param.time_base(av_make_q(1,25));
+        codec_param.framerate(av_make_q(25,1));
+
+        encoder.SetCodecParam(codec_param);
+        encoder.Open();
+        encoder.InitSwsContext();
+
         decoder.InitSwsContext();
         AVPacket *packet;
 
@@ -254,5 +289,5 @@ void decode_encode2()
         std::cerr << e.message() << std::endl;
     }
 
-    std::cout << "Test: End Decode encode" << std::endl;
+    std::cout << "Test: End Decode encode 2" << std::endl;
 }
