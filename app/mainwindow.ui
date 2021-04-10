@@ -6,25 +6,87 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>258</width>
-    <height>162</height>
+    <width>344</width>
+    <height>132</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="testButton">
+   <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>0</y>
+      <y>20</y>
+      <width>60</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Input File:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>55</y>
+      <width>70</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Output File:</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::PlainText</enum>
+    </property>
+    <property name="scaledContents">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QTextBrowser" name="inputFile">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>10</y>
+      <width>160</width>
+      <height>30</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextBrowser" name="outputFile">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>50</y>
+      <width>160</width>
+      <height>30</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="runButton">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>30</y>
       <width>75</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>Run</string>
     </property>
    </widget>
   </widget>
@@ -33,7 +95,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>258</width>
+     <width>344</width>
      <height>21</height>
     </rect>
    </property>
