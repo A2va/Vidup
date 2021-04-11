@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>344</width>
-    <height>132</height>
+    <width>345</width>
+    <height>159</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -79,8 +79,8 @@
    <widget class="QPushButton" name="runButton">
     <property name="geometry">
      <rect>
-      <x>260</x>
-      <y>30</y>
+      <x>10</x>
+      <y>90</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -89,13 +89,39 @@
      <string>Run</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="inputButton">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>15</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Browse</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="outputButton">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>55</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Browse</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>344</width>
+     <width>345</width>
      <height>21</height>
     </rect>
    </property>
