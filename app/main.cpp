@@ -37,19 +37,19 @@ int main(int argc, char **argv)
 
     av_log_set_level(AV_LOG_DEBUG);
 
-    encode_image1();
-    encode_image2();
+    // encode_image1();
+    // encode_image2();
 
-    decode_image1();
-    decode_image2();
+    // decode_image1();
+    // decode_image2();
 
-    decode_encode1();
-    decode_encode2();
+    // decode_encode1();
+    // decode_encode2();
     
-    QApplication test(argc, argv);
-    MainWindow w;
-    w.show();
-    return test.exec();
+    QApplication app(argc, argv);
+    MainWindow win;
+    win.show();
+    return app.exec();
 
     return 0;
 }

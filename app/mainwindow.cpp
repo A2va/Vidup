@@ -15,11 +15,30 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
                                           ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    connect(ui->inputButton, &QPushButton::released, this, &MainWindow::inputFile);
+    connect(ui->outputButton, &QPushButton::released, this, &MainWindow::outputFile);
+    connect(ui->runButton, &QPushButton::released, this, &MainWindow::run);
+}
+
+void MainWindow::run()
+{
+
+}
+
+void MainWindow::inputFile()
+{
+    input_filename_ = QFileDialog::getOpenFileName(this, "Open Video File", "", "All Files (*)");
+}
+
+void MainWindow::outputFile()
+{
+    output_filename_ = QFileDialog::getOpenFileName(this, "Open Video File", "", "All Files (*)");
 }
 
 MainWindow::~MainWindow()

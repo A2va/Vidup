@@ -27,13 +27,17 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    void handleButton();
-    void handleButton1();    
-    void avcpp_test();
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+public Q_SLOTS:
+   void inputFile();
+   void outputFile();
+   void run();
+
 private:
+    QString input_filename_;
+    QString output_filename_;
     Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H
