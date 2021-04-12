@@ -13,10 +13,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include <QFileDialog>
 
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "worker.h"
+#include <iostream>
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
                                           ui(new Ui::MainWindow)
 {
@@ -24,11 +26,33 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     connect(ui->inputButton, &QPushButton::released, this, &MainWindow::inputFile);
     connect(ui->outputButton, &QPushButton::released, this, &MainWindow::outputFile);
     connect(ui->runButton, &QPushButton::released, this, &MainWindow::run);
+
+    // Setup  the worker
+
+    Worker *worker = new Worker;
+    // Move the worker inside workerThread
+    worker->moveToThread(&workerThread);
+    // Connect the QThread signal finished to delete worker 
+    connect(&workerThread, &QThread::finished, worker, &QObject::deleteLater);
+    // Connect signal operate to doWork of working 
+    // emit operate will start the work
+    connect(this, &MainWindow::operate, worker, &Worker::doWork);
+    // Connect the signal resulReady to handleResult
+    connect(worker, &Worker::resultReady, this, &MainWindow::handleResults);
+    //Start the thread 
+    workerThread.start();
+
 }
 
 void MainWindow::run()
 {
+    //Emit the signal to run the working function
+    emit operate("Start the work");
+}
 
+void MainWindow::handleResults(const QString &s)
+{
+    std::cout << s.toStdString() << std::endl;
 }
 
 void MainWindow::inputFile()
@@ -43,5 +67,7 @@ void MainWindow::outputFile()
 
 MainWindow::~MainWindow()
 {
+    workerThread.quit();
+    workerThread.wait();
     delete ui;
 }

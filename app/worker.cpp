@@ -13,36 +13,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QThread>
+#include "worker.h"
+#include <iostream>
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
-
-class MainWindow : public QMainWindow
+void Worker::doWork(const QString &parameter)
 {
-Q_OBJECT
-    QThread workerThread;
-public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    std::cout << parameter.toStdString() << std::endl; // Display the input parameter
 
-public Q_SLOTS:
-   void inputFile();
-   void outputFile();
-   void run();
-   void handleResults(const QString &s);
-   
-Q_SIGNALS:
-    void operate(const QString &);
+    QString result="End of work"; // Get parameter of the object has emitted the signal
 
-private:
-    QString input_filename_;
-    QString output_filename_;
-    Ui::MainWindow *ui;
-};
-#endif // MAINWINDOW_H
+    for(int i = 0; i <= 100; i++) // Some working stuff
+    {
+        std::cout << i << std::endl;
+    }
+    emit resultReady(result); // Emit a signal to tell that finish
+}
+
+

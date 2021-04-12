@@ -43,6 +43,9 @@ set(SOURCES
       app/mainwindow.h
       app/mainwindow.ui
 
+      app/worker.cpp
+      app/worker.h
+
       app/ffmpeg/codecparam.cpp
       app/ffmpeg/codecparam.h
       app/ffmpeg/ffmpegerror.cpp

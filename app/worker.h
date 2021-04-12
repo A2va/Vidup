@@ -13,36 +13,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
 
-#include <QMainWindow>
+#ifndef WORKER_H
+#define WORKER_H
+
+#include <QObject>
 #include <QThread>
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
-
-class MainWindow : public QMainWindow
+class Worker : public QObject
 {
 Q_OBJECT
-    QThread workerThread;
-public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
 
 public Q_SLOTS:
-   void inputFile();
-   void outputFile();
-   void run();
-   void handleResults(const QString &s);
-   
-Q_SIGNALS:
-    void operate(const QString &);
+    void doWork(const QString &parameter);
 
-private:
-    QString input_filename_;
-    QString output_filename_;
-    Ui::MainWindow *ui;
+Q_SIGNALS:
+    void resultReady(const QString &result);
 };
-#endif // MAINWINDOW_H
+
+#endif
