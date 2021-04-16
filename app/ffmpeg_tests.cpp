@@ -14,6 +14,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <opencv2/opencv.hpp>
+#include <opencv2/dnn_superres.hpp>
 
 #include "ffmpeg_tests.h"
 
@@ -26,7 +27,7 @@
 
 extern "C"
 {
-    #include <libavutil/rational.h>
+#include <libavutil/rational.h>
 }
 
 void encode_image1()
@@ -42,8 +43,8 @@ void encode_image1()
         codec_param.width(1920);
         codec_param.height(1080);
         codec_param.bit_rate(400000);
-        codec_param.time_base(av_make_q(1,25));
-        codec_param.framerate(av_make_q(25,1));
+        codec_param.time_base(av_make_q(1, 25));
+        codec_param.framerate(av_make_q(25, 1));
         codec_param.pix_fmt(AV_PIX_FMT_YUV420P);
 
         codec_param.audio_codec_id(AV_CODEC_ID_NONE); // With this codec id the encoder doesn't create a audio stream
@@ -89,8 +90,8 @@ void encode_image2()
         codec_param.width(1920);
         codec_param.height(1080);
         codec_param.bit_rate(400000);
-        codec_param.time_base(av_make_q(1,25));
-        codec_param.framerate(av_make_q(25,1));
+        codec_param.time_base(av_make_q(1, 25));
+        codec_param.framerate(av_make_q(25, 1));
         codec_param.pix_fmt(AV_PIX_FMT_YUV420P);
 
         codec_param.audio_codec_id(AV_CODEC_ID_NONE); // With this codec id the encoder doesn't create a audio stream
@@ -184,11 +185,11 @@ void decode_encode1()
         FFmpegDecoder decoder(filename);
 
         decoder.Open();
-        CodecParam codec_param= decoder.GetCodecParam();
-        // Apparently the encoder needs different framerate and time base than the decoder 
+        CodecParam codec_param = decoder.GetCodecParam();
+        // Apparently the encoder needs different framerate and time base than the decoder
         // See this: https://gist.github.com/yohhoy/50ea5fe868a2b3695e19
-        codec_param.time_base(av_make_q(1,25));
-        codec_param.framerate(av_make_q(25,1));
+        codec_param.time_base(av_make_q(1, 25));
+        codec_param.framerate(av_make_q(25, 1));
 
         encoder.SetCodecParam(codec_param);
         encoder.Open();
@@ -244,9 +245,9 @@ void decode_encode2()
         FFmpegDecoder decoder(filename);
 
         decoder.Open();
-        CodecParam codec_param= decoder.GetCodecParam();
-        codec_param.time_base(av_make_q(1,25));
-        codec_param.framerate(av_make_q(25,1));
+        CodecParam codec_param = decoder.GetCodecParam();
+        codec_param.time_base(av_make_q(1, 25));
+        codec_param.framerate(av_make_q(25, 1));
 
         encoder.SetCodecParam(codec_param);
         encoder.Open();
@@ -290,4 +291,80 @@ void decode_encode2()
     }
 
     std::cout << "Test: End Decode encode 2" << std::endl;
+}
+
+void upscale()
+{
+    std::string filename = "./tests/decode_encode.mp4";
+    std::string filename_out = "./tests/decode_encode_out_up.mp4";
+
+    std::cout << "Test: Decode encode 1" << std::endl;
+    try
+    {
+        int scale = 2;
+        cv::dnn_superres::DnnSuperResImpl sr;
+        sr.readModel("./models/ESPCN_x2.pb");
+        sr.setModel("espcn", scale);
+        FFmpegEncoder encoder(filename_out);
+        FFmpegDecoder decoder(filename);
+
+        decoder.Open();
+        CodecParam codec_param = decoder.GetCodecParam();
+        // Apparently the encoder needs different framerate and time base than the decoder
+        // See this: https://gist.github.com/yohhoy/50ea5fe868a2b3695e19
+        codec_param.time_base(av_make_q(1, 25));
+        codec_param.framerate(av_make_q(25, 1));
+
+        codec_param.width(codec_param.width() * scale);
+        codec_param.height(codec_param.height() * scale);
+
+        encoder.SetCodecParam(codec_param);
+        encoder.Open();
+        encoder.InitSwsContext();
+
+        decoder.InitSwsContext();
+
+        AVFrame *frame_dec;
+        AVFrame *frame_enc = encoder.createFrame();
+        cv::Mat mat;
+        cv::Mat mat_enc;
+
+        const AVStream *in_stream = decoder.getVideoStream();
+        const AVStream *out_stream = encoder.getVideoStream();
+        for (int64_t i = 0; i < decoder.GetNumberVideoFrame(); i++)
+        {
+            mat = decoder.readMatrix();
+            if (!mat.empty())
+            {
+                sr.upsample(mat, mat_enc);
+                encoder.Matrix2Frame(mat_enc, frame_enc);
+
+                frame_enc->pts = i; // Set presentation timestamp to current
+                //av_rescale_q(frame->pts, in_stream->time_base, out_stream->time_base);
+
+                encoder.writeVideoFrame(frame_enc);
+                // av_frame_unref(frame_enc);
+            }
+        }
+
+        for (int64_t i = 0; i < decoder.GetNumberAudioFrame(); i++)
+        {
+            frame_dec = decoder.readAudioFrame();
+            if (frame_dec != nullptr)
+            {
+                encoder.writeAudioFrame(frame_dec);
+            }
+        }
+
+        av_frame_unref(frame_dec);
+
+        decoder.Close();
+        encoder.Close();
+    }
+    catch (FFmpegError &e)
+    {
+        std::cerr << e.message() << std::endl;
+    }
+
+    std::cout << "Test: End Decode encode 1" << std::endl;
 }

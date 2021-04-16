@@ -46,10 +46,12 @@ int main(int argc, char **argv)
     // decode_encode1();
     // decode_encode2();
     
-    QApplication app(argc, argv);
-    MainWindow win;
-    win.show();
-    return app.exec();
+    upscale();
+
+    // QApplication app(argc, argv);
+    // MainWindow win;
+    // win.show();
+    // return app.exec();
 
     return 0;
 }

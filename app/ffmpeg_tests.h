@@ -24,4 +24,6 @@ void decode_image2();
 
 void decode_encode1();
 void decode_encode2();
+
+void upscale();
 #endif
