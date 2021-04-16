@@ -323,6 +323,10 @@ cv::Mat FFmpegDecoder::readMatrix()
 {
 	AVFrame *frame;
 	frame = readVideoFrame();
+	if(frame == nullptr)
+	{
+		return cv::Mat{};
+	}
 	return Frame2Matrix(frame);
 }
 
