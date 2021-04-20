@@ -56,26 +56,6 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QTextEdit" name="inputFile">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>10</y>
-      <width>160</width>
-      <height>30</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="outputFile">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>50</y>
-      <width>160</width>
-      <height>30</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QPushButton" name="runButton">
     <property name="geometry">
      <rect>
@@ -93,7 +73,7 @@
     <property name="geometry">
      <rect>
       <x>260</x>
-      <y>15</y>
+      <y>20</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -106,13 +86,33 @@
     <property name="geometry">
      <rect>
       <x>260</x>
-      <y>55</y>
+      <y>50</y>
       <width>75</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
      <string>Browse</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="inputFile">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>20</y>
+      <width>161</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="outputFile">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>50</y>
+      <width>161</width>
+      <height>20</height>
+     </rect>
     </property>
    </widget>
   </widget>
