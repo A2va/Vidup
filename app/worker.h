@@ -19,10 +19,23 @@
 
 #include <QObject>
 #include <QThread>
+#include <QString>
 
 class Worker : public QObject
 {
 Q_OBJECT
+
+private:
+    QString output_filename_;
+    QString input_filename_;
+    QString algorithm_;
+    int scale_;
+
+public:
+    void setInputFile(const QString &file);
+    void setOutputFile(const QString &file);
+    void setScale(int scale);
+    void setAlgorithm(const QString &algorithm);
 
 public Q_SLOTS:
     void doWork(const QString &parameter);

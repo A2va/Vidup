@@ -13,7 +13,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
 #include "worker.h"
 #include <iostream>
 
@@ -21,13 +20,31 @@ void Worker::doWork(const QString &parameter)
 {
     std::cout << parameter.toStdString() << std::endl; // Display the input parameter
 
-    QString result="End of work"; // Get parameter of the object has emitted the signal
+    QString result = "End of work"; // Get parameter of the object has emitted the signal
 
-    for(int i = 0; i <= 100; i++) // Some working stuff
+    for (int i = 0; i <= 100; i++) // Some working stuff
     {
         std::cout << i << std::endl;
     }
     emit resultReady(result); // Emit a signal to tell that finish
 }
 
+void Worker::setInputFile(const QString &file)
+{
+    input_filename_ = file;
+}
 
+void Worker::setOutputFile(const QString &file)
+{
+    output_filename_ = file;
+}
+
+void Worker::setScale(int scale)
+{
+    scale_ = scale;
+}
+
+void Worker::setAlgorithm(const QString &algorithm)
+{
+    algorithm_ = algorithm;
+}
