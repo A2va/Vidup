@@ -27,6 +27,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     connect(ui->outputButton, &QPushButton::released, this, &MainWindow::outputFile);
     connect(ui->runButton, &QPushButton::released, this, &MainWindow::run);
 
+    connect(ui->inputFile,&QLineEdit::textChanged,this,&MainWindow::inputFileChanged);
+    connect(ui->outputFile,&QLineEdit::textChanged,this,&MainWindow::outputFileChanged);
+
     // Setup  the worker
 
     Worker *worker = new Worker;
@@ -44,6 +47,18 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 
 }
 
+void MainWindow::inputFileChanged(const  QString &s)
+{
+    input_filename_ = s;
+    ui->inputFile->setText(input_filename_);
+}
+
+void MainWindow::outputFileChanged(const  QString &s)
+{
+    output_filename_ = s;
+    ui->outputFile->setText(output_filename_);
+}
+
 void MainWindow::run()
 {
     //Emit the signal to run the working function
@@ -57,12 +72,14 @@ void MainWindow::handleResults(const QString &s)
 
 void MainWindow::inputFile()
 {
-    input_filename_ = QFileDialog::getOpenFileName(this, "Open Video File", "", "All Files (*)");
+    QString file = QFileDialog::getOpenFileName(this, "Open Video File", "", "All Files (*)");
+    inputFileChanged(file);
 }
 
 void MainWindow::outputFile()
 {
-    output_filename_ = QFileDialog::getOpenFileName(this, "Open Video File", "", "All Files (*)");
+    QString file = QFileDialog::getOpenFileName(this, "Open Video File", "", "All Files (*)");
+    outputFileChanged(file);
 }
 
 MainWindow::~MainWindow()

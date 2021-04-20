@@ -36,6 +36,8 @@ public Q_SLOTS:
    void outputFile();
    void run();
    void handleResults(const QString &s);
+   void inputFileChanged(const  QString &s);
+   void outputFileChanged(const  QString &s);
    
 Q_SIGNALS:
     void operate(const QString &);
