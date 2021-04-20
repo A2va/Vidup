@@ -28,7 +28,7 @@ FFmpegDecoder::FFmpegDecoder(std::string filename)
 	filename_ = filename;
 }
 
-CodecParam FFmpegDecoder::GetCodecParam()
+CodecParam FFmpegDecoder::getCodecParam()
 {
 	CodecParam codec_param;
 

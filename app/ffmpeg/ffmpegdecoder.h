@@ -42,7 +42,7 @@ public:
   FFmpegDecoder(std::string filename);
   ~FFmpegDecoder();
 
-  CodecParam GetCodecParam();
+  CodecParam getCodecParam();
 
   bool Open();
   void Close();
