@@ -38,7 +38,7 @@ public:
   ~FFmpegEncoder();
 
   // Call this method before open or use the second constructor 
-  void SetCodecParam(CodecParam &codec_param);
+  void setCodecParam(CodecParam &codec_param);
 
   bool Open();
   void Close();

@@ -33,7 +33,7 @@ FFmpegEncoder::FFmpegEncoder(std::string filename, CodecParam &codec_param)
 	InitializeCodec();
 }
 
-void FFmpegEncoder::SetCodecParam(CodecParam &codec_param)
+void FFmpegEncoder::setCodecParam(CodecParam &codec_param)
 {
 	codec_param_ = codec_param;
 	InitializeCodec();
