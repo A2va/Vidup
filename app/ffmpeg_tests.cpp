@@ -49,7 +49,7 @@ void encode_image1()
 
         codec_param.audio_codec_id(AV_CODEC_ID_NONE); // With this codec id the encoder doesn't create a audio stream
 
-        encoder.SetCodecParam(codec_param);
+        encoder.setCodecParam(codec_param);
         encoder.Open();
         encoder.InitSwsContext();
 
@@ -96,7 +96,7 @@ void encode_image2()
 
         codec_param.audio_codec_id(AV_CODEC_ID_NONE); // With this codec id the encoder doesn't create a audio stream
 
-        encoder.SetCodecParam(codec_param);
+        encoder.setCodecParam(codec_param);
 
         encoder.Open();
         encoder.InitSwsContext();
@@ -185,13 +185,13 @@ void decode_encode1()
         FFmpegDecoder decoder(filename);
 
         decoder.Open();
-        CodecParam codec_param = decoder.GetCodecParam();
+        CodecParam codec_param = decoder.getCodecParam();
         // Apparently the encoder needs different framerate and time base than the decoder
         // See this: https://gist.github.com/yohhoy/50ea5fe868a2b3695e19
         codec_param.time_base(av_make_q(1, 25));
         codec_param.framerate(av_make_q(25, 1));
 
-        encoder.SetCodecParam(codec_param);
+        encoder.setCodecParam(codec_param);
         encoder.Open();
         encoder.InitSwsContext();
 
@@ -245,11 +245,11 @@ void decode_encode2()
         FFmpegDecoder decoder(filename);
 
         decoder.Open();
-        CodecParam codec_param = decoder.GetCodecParam();
+        CodecParam codec_param = decoder.getCodecParam();
         codec_param.time_base(av_make_q(1, 25));
         codec_param.framerate(av_make_q(25, 1));
 
-        encoder.SetCodecParam(codec_param);
+        encoder.setCodecParam(codec_param);
         encoder.Open();
         encoder.InitSwsContext();
 
@@ -309,7 +309,7 @@ void upscale()
         FFmpegDecoder decoder(filename);
 
         decoder.Open();
-        CodecParam codec_param = decoder.GetCodecParam();
+        CodecParam codec_param = decoder.getCodecParam();
         // Apparently the encoder needs different framerate and time base than the decoder
         // See this: https://gist.github.com/yohhoy/50ea5fe868a2b3695e19
         codec_param.time_base(av_make_q(1, 25));
@@ -318,7 +318,7 @@ void upscale()
         codec_param.width(codec_param.width() * scale);
         codec_param.height(codec_param.height() * scale);
 
-        encoder.SetCodecParam(codec_param);
+        encoder.setCodecParam(codec_param);
         encoder.Open();
         encoder.InitSwsContext();
 
