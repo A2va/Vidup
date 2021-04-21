@@ -18,6 +18,7 @@
 
 #include <QMainWindow>
 #include <QThread>
+#include <QAbstractButton>
 #include "worker.h"
 
 QT_BEGIN_NAMESPACE
@@ -37,9 +38,9 @@ public Q_SLOTS:
    void outputFile();
    void run();
    void handleResults(const QString &s);
-   void inputFileChanged(const  QString &s);
-   void outputFileChanged(const  QString &s);
-   
+   void inputFileChanged(const QString &s);
+   void outputFileChanged(const QString &s);
+   void algorithmChanged(QAbstractButton *button);
 Q_SIGNALS:
     void operate(const QString &);
 
@@ -47,6 +48,8 @@ private:
     Worker worker_;
     QString input_filename_;
     QString output_filename_;
+    QString algorithm_;
+    int scale_;
     Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H

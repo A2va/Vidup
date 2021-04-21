@@ -14,6 +14,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <QFileDialog>
+#include <QButtonGroup>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -30,6 +31,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     connect(ui->inputFile,&QLineEdit::textChanged,this,&MainWindow::inputFileChanged);
     connect(ui->outputFile,&QLineEdit::textChanged,this,&MainWindow::outputFileChanged);
 
+    connect(ui->buttonGroup,qOverload<QAbstractButton *>(&QButtonGroup::buttonClicked),this,&MainWindow::algorithmChanged);
+    
     // Setup  the worker
 
     Worker *worker_ = new Worker;
@@ -47,7 +50,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 
     worker_->setInputFile(input_filename_);
     worker_->setOutputFile(output_filename_);
+    worker_->setAlgorithm(algorithm_);
+}
 
+void MainWindow::algorithmChanged(QAbstractButton *button)
+{
+    algorithm_ = button->text().toLower();
 }
 
 void MainWindow::inputFileChanged(const  QString &s)
