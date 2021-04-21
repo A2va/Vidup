@@ -22,25 +22,30 @@
 #include "worker.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui
+{
+    class MainWindow;
+}
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
-Q_OBJECT
+    Q_OBJECT
     QThread workerThread;
+
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 public Q_SLOTS:
-   void inputFile();
-   void outputFile();
-   void run();
-   void handleResults(const QString &s);
-   void inputFileChanged(const QString &s);
-   void outputFileChanged(const QString &s);
-   void algorithmChanged(QAbstractButton *button);
+    void inputFile();
+    void outputFile();
+    void run();
+    void handleResults(const QString &s);
+    void inputFileChanged(const QString &s);
+    void outputFileChanged(const QString &s);
+    void algorithmChanged(QAbstractButton *button);
+    void scaleChanged(QAbstractButton *button);
 Q_SIGNALS:
     void operate(const QString &);
 

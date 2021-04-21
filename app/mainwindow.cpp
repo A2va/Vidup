@@ -31,8 +31,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     connect(ui->inputFile,&QLineEdit::textChanged,this,&MainWindow::inputFileChanged);
     connect(ui->outputFile,&QLineEdit::textChanged,this,&MainWindow::outputFileChanged);
 
-    connect(ui->buttonGroup,qOverload<QAbstractButton *>(&QButtonGroup::buttonClicked),this,&MainWindow::algorithmChanged);
-    
+    connect(ui->algoGroup,qOverload<QAbstractButton *>(&QButtonGroup::buttonClicked),this,&MainWindow::algorithmChanged);
+    connect(ui->scaleGroup,qOverload<QAbstractButton *>(&QButtonGroup::buttonClicked),this,&MainWindow::scaleChanged);
+
     // Setup  the worker
 
     Worker *worker_ = new Worker;
@@ -51,6 +52,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     worker_->setInputFile(input_filename_);
     worker_->setOutputFile(output_filename_);
     worker_->setAlgorithm(algorithm_);
+}
+
+void MainWindow::algorithmChanged(QAbstractButton *button)
+{
+    scale_ = button->text().toInt();
 }
 
 void MainWindow::algorithmChanged(QAbstractButton *button)
