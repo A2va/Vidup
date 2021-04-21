@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>369</width>
-    <height>187</height>
+    <width>380</width>
+    <height>192</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -118,7 +118,7 @@
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>100</x>
+      <x>210</x>
       <y>80</y>
       <width>161</width>
       <height>61</height>
@@ -140,7 +140,7 @@
       <string>ESDR</string>
      </property>
      <attribute name="buttonGroup">
-      <string notr="true">buttonGroup</string>
+      <string notr="true">algoGroup</string>
      </attribute>
     </widget>
     <widget class="QRadioButton" name="radioButton_2">
@@ -156,7 +156,7 @@
       <string>ESPCN</string>
      </property>
      <attribute name="buttonGroup">
-      <string notr="true">buttonGroup</string>
+      <string notr="true">algoGroup</string>
      </attribute>
     </widget>
     <widget class="QRadioButton" name="radioButton_3">
@@ -172,7 +172,7 @@
       <string>FSRCNN</string>
      </property>
      <attribute name="buttonGroup">
-      <string notr="true">buttonGroup</string>
+      <string notr="true">algoGroup</string>
      </attribute>
     </widget>
     <widget class="QRadioButton" name="radioButton_4">
@@ -188,7 +188,68 @@
       <string>LAPSRN</string>
      </property>
      <attribute name="buttonGroup">
-      <string notr="true">buttonGroup</string>
+      <string notr="true">algoGroup</string>
+     </attribute>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_2">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>80</y>
+      <width>111</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Scale</string>
+    </property>
+    <widget class="QRadioButton" name="radioButton_5">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>31</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>2</string>
+     </property>
+     <attribute name="buttonGroup">
+      <string notr="true">scaleGroup</string>
+     </attribute>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_6">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>20</y>
+       <width>31</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>3</string>
+     </property>
+     <attribute name="buttonGroup">
+      <string notr="true">scaleGroup</string>
+     </attribute>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_7">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>31</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>4</string>
+     </property>
+     <attribute name="buttonGroup">
+      <string notr="true">scaleGroup</string>
      </attribute>
     </widget>
    </widget>
@@ -198,7 +259,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>369</width>
+     <width>380</width>
      <height>21</height>
     </rect>
    </property>
@@ -208,6 +269,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup"/>
+  <buttongroup name="algoGroup"/>
+  <buttongroup name="scaleGroup"/>
  </buttongroups>
 </ui>
