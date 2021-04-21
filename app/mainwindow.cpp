@@ -32,18 +32,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 
     // Setup  the worker
 
-    Worker *worker = new Worker;
+    Worker *worker_ = new Worker;
     // Move the worker inside workerThread
-    worker->moveToThread(&workerThread);
+    worker_->moveToThread(&workerThread);
     // Connect the QThread signal finished to delete worker 
-    connect(&workerThread, &QThread::finished, worker, &QObject::deleteLater);
+    connect(&workerThread, &QThread::finished, worker_, &QObject::deleteLater);
     // Connect signal operate to doWork of working 
     // emit operate will start the work
-    connect(this, &MainWindow::operate, worker, &Worker::doWork);
+    connect(this, &MainWindow::operate, worker_, &Worker::doWork);
     // Connect the signal resulReady to handleResult
-    connect(worker, &Worker::resultReady, this, &MainWindow::handleResults);
+    connect(worker_, &Worker::resultReady, this, &MainWindow::handleResults);
     //Start the thread 
     workerThread.start();
+
+    worker_->setInputFile(input_filename_);
+    worker_->setOutputFile(output_filename_);
 
 }
 

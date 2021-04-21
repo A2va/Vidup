@@ -18,6 +18,7 @@
 
 #include <QMainWindow>
 #include <QThread>
+#include "worker.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -43,6 +44,7 @@ Q_SIGNALS:
     void operate(const QString &);
 
 private:
+    Worker worker_;
     QString input_filename_;
     QString output_filename_;
     Ui::MainWindow *ui;
