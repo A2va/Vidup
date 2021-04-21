@@ -49,12 +49,18 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     //Start the thread 
     workerThread.start();
 
+    ui->scale2->setChecked(true);
+    scale_ = 2;
+
+    ui->esdrAlgo->setChecked(true);
+    algorithm_ = "esdr";
+
     worker_->setInputFile(input_filename_);
     worker_->setOutputFile(output_filename_);
     worker_->setAlgorithm(algorithm_);
 }
 
-void MainWindow::algorithmChanged(QAbstractButton *button)
+void MainWindow::scaleChanged(QAbstractButton *button)
 {
     scale_ = button->text().toInt();
 }

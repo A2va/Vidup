@@ -127,7 +127,7 @@
     <property name="title">
      <string>Algorithm</string>
     </property>
-    <widget class="QRadioButton" name="radioButton">
+    <widget class="QRadioButton" name="esdrAlgo">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -204,7 +204,7 @@
     <property name="title">
      <string>Scale</string>
     </property>
-    <widget class="QRadioButton" name="radioButton_5">
+    <widget class="QRadioButton" name="scale2">
      <property name="geometry">
       <rect>
        <x>10</x>
