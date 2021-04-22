@@ -33,6 +33,7 @@ extern "C"
 #include <QDebug>
 
 #include <queue>
+#include <array>
 
 #include "codecparam.h"
 
@@ -104,7 +105,7 @@ private:
 
   std::string filename_;
 
-  std::queue<AVPacket*> fifo_packet_[2];
+  std::array<std::queue<AVPacket*>,2> fifo_packet_;
   
   bool find_video_=false;
   bool find_audio_=false;
