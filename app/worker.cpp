@@ -18,13 +18,13 @@
 
 void Worker::doWork(const QString &parameter)
 {
-    std::cout << parameter.toStdString() << std::endl; // Display the input parameter
+    qDebug() << parameter; // Display the input parameter
 
     QString result = "End of work"; // Get parameter of the object has emitted the signal
 
     for (int i = 0; i <= 100; i++) // Some working stuff
     {
-        std::cout << i << std::endl;
+        qDebug() << i;
     }
     emit resultReady(result); // Emit a signal to tell that finish
 }

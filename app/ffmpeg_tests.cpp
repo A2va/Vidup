@@ -13,6 +13,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+#include <QDebug>
+
 #include <opencv2/opencv.hpp>
 #include <opencv2/dnn_superres.hpp>
 
@@ -34,7 +36,7 @@ void encode_image1()
 {
     std::string filename = "./tests/encode_image1.mp4";
 
-    std::cout << "Test: Encode image 1" << std::endl;
+    qDebug() << "Test: Encode image 1";
     try
     {
         FFmpegEncoder encoder(filename);
@@ -71,16 +73,16 @@ void encode_image1()
     }
     catch (FFmpegError &e)
     {
-        std::cout << e.message();
+        qCritical() << QString::fromStdString(e.message());
     }
-    std::cout << "Test: End Encode image 1" << std::endl;
+    qDebug() << "Test: End Encode image 1";
 }
 
 void encode_image2()
 {
     std::string filename = "./tests/encode_image2.mp4";
 
-    std::cout << "Test: Encode image 2" << std::endl;
+    qDebug() << "Test: Encode image 2";
     try
     {
         FFmpegEncoder encoder(filename);
@@ -113,16 +115,16 @@ void encode_image2()
     }
     catch (FFmpegError &e)
     {
-        std::cerr << e.message() << std::endl;
+        qCritical() << QString::fromStdString(e.message());
     }
-    std::cout << "Test: End Encode image 2" << std::endl;
+    qDebug() << "Test: End Encode image 2";
 }
 
 void decode_image1()
 {
     std::string filename = "./tests/decode_image.mp4";
 
-    std::cout << "Test: Decode image 1" << std::endl;
+    qDebug() << "Test: Decode image 1";
     try
     {
         FFmpegDecoder decoder(filename);
@@ -142,16 +144,16 @@ void decode_image1()
     }
     catch (FFmpegError &e)
     {
-        std::cerr << e.message() << std::endl;
+        qCritical() << QString::fromStdString(e.message());
     }
-    std::cout << "Test: End Decode image 1" << std::endl;
+    qDebug() << "Test: End Decode image 1";
 }
 
 void decode_image2()
 {
     std::string filename = "./tests/decode_image.mp4";
 
-    std::cout << "Test: Decode image 2" << std::endl;
+    qDebug() << "Test: Decode image 2";
     try
     {
         FFmpegDecoder decoder(filename);
@@ -168,9 +170,9 @@ void decode_image2()
     }
     catch (FFmpegError &e)
     {
-        std::cerr << e.message() << std::endl;
+        qCritical() << QString::fromStdString(e.message());
     }
-    std::cout << "Test: End Decode image 2" << std::endl;
+    qDebug() << "Test: End Decode image 2";
 }
 
 void decode_encode1()
@@ -178,7 +180,7 @@ void decode_encode1()
     std::string filename = "./tests/decode_encode.mp4";
     std::string filename_out = "./tests/decode_encode_out.mp4";
 
-    std::cout << "Test: Decode encode 1" << std::endl;
+    qDebug() << "Test: Decode encode 1";
     try
     {
         FFmpegEncoder encoder(filename_out);
@@ -227,10 +229,10 @@ void decode_encode1()
     }
     catch (FFmpegError &e)
     {
-        std::cerr << e.message() << std::endl;
+        qCritical() << QString::fromStdString(e.message());
     }
 
-    std::cout << "Test: End Decode encode 1" << std::endl;
+    qDebug() << "Test: End Decode encode 1";
 }
 
 void decode_encode2()
@@ -238,7 +240,7 @@ void decode_encode2()
     std::string filename = "./tests/decode_encode.mp4";
     std::string filename_out = "./tests/decode_encode_out2.mp4";
     // Same test as decode_encode1 but with packet (not working at the moment)
-    std::cout << "Test: Decode encode 2" << std::endl;
+    qDebug() << "Test: Decode encode 2";
     try
     {
         FFmpegEncoder encoder(filename_out);
@@ -287,10 +289,10 @@ void decode_encode2()
     }
     catch (FFmpegError &e)
     {
-        std::cerr << e.message() << std::endl;
+        qCritical() << QString::fromStdString(e.message());
     }
 
-    std::cout << "Test: End Decode encode 2" << std::endl;
+    qDebug() << "Test: End Decode encode 2";
 }
 
 void upscale()
@@ -298,7 +300,7 @@ void upscale()
     std::string filename = "./tests/decode_encode.mp4";
     std::string filename_out = "./tests/decode_encode_out_up.mp4";
 
-    std::cout << "Test: Decode encode 1" << std::endl;
+    qDebug() << "Test: Decode encode 1";
     try
     {
         int scale = 2;
@@ -363,8 +365,8 @@ void upscale()
     }
     catch (FFmpegError &e)
     {
-        std::cerr << e.message() << std::endl;
+        qCritical() << QString::fromStdString(e.message());
     }
 
-    std::cout << "Test: End Decode encode 1" << std::endl;
+    qDebug() << "Test: End Decode encode 1";
 }

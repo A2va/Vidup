@@ -90,7 +90,7 @@ void MainWindow::run()
 
 void MainWindow::handleResults(const QString &s)
 {
-    std::cout << s.toStdString() << std::endl;
+    qDebug() << s;
 }
 
 void MainWindow::inputFile()
