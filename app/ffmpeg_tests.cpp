@@ -333,6 +333,7 @@ void upscale()
 
         const AVStream *in_stream = decoder.getVideoStream();
         const AVStream *out_stream = encoder.getVideoStream();
+        auto start = std::chrono::system_clock::now();    
         for (int64_t i = 0; i < decoder.GetNumberVideoFrame(); i++)
         {
             mat = decoder.readMatrix();
@@ -362,6 +363,10 @@ void upscale()
 
         decoder.Close();
         encoder.Close();
+
+        auto end = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed_seconds = end-start;
+        qDebug() << "elapsed time: " << elapsed_seconds.count();
     }
     catch (FFmpegError &e)
     {
