@@ -14,7 +14,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <QFileDialog>
-#include <QButtonGroup>
+#include <QDebug>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -85,7 +85,7 @@ void MainWindow::outputFileChanged(const  QString &s)
 void MainWindow::run()
 {
     //Emit the signal to run the working function
-    emit operate("Start the work");
+    emit operate();
 }
 
 void MainWindow::handleResults(const QString &s)

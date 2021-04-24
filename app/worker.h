@@ -38,7 +38,7 @@ public:
     void setAlgorithm(const QString &algorithm);
 
 public Q_SLOTS:
-    void doWork(const QString &parameter);
+    void doWork();
 
 Q_SIGNALS:
     void resultReady(const QString &result);

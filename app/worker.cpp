@@ -13,13 +13,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+#include <QDebug>
+
 #include "worker.h"
-#include <iostream>
+#include "ffmpeg/ffmpegencoder.h"
+#include "ffmpeg/ffmpegdecoder.h"
 
-void Worker::doWork(const QString &parameter)
+#include "ffmpeg/ffmpegerror.h"
+
+#include "ffmpeg/codecparam.h"
+
+void Worker::doWork()
 {
-    qDebug() << parameter; // Display the input parameter
-
     QString result = "End of work"; // Get parameter of the object has emitted the signal
 
     for (int i = 0; i <= 100; i++) // Some working stuff

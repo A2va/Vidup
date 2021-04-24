@@ -47,7 +47,7 @@ public Q_SLOTS:
     void algorithmChanged(QAbstractButton *button);
     void scaleChanged(QAbstractButton *button);
 Q_SIGNALS:
-    void operate(const QString &);
+    void operate();
 
 private:
     Worker worker_;
