@@ -127,7 +127,7 @@
     <property name="title">
      <string>Algorithm</string>
     </property>
-    <widget class="QRadioButton" name="esdrAlgo">
+    <widget class="QRadioButton" name="edsrAlgo">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -137,7 +137,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>ESDR</string>
+      <string>EDSR</string>
      </property>
      <attribute name="buttonGroup">
       <string notr="true">algoGroup</string>

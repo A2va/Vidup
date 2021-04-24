@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 
     // Setup  the worker
 
-    Worker *worker_ = new Worker;
+    worker_ = new Worker;
     // Move the worker inside workerThread
     worker_->moveToThread(&workerThread);
     // Connect the QThread signal finished to delete worker 
@@ -52,12 +52,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     ui->scale2->setChecked(true);
     scale_ = 2;
 
-    ui->esdrAlgo->setChecked(true);
-    algorithm_ = "esdr";
-
-    worker_->setInputFile(input_filename_);
-    worker_->setOutputFile(output_filename_);
-    worker_->setAlgorithm(algorithm_);
+    ui->edsrAlgo->setChecked(true);
+    algorithm_ = "edsr";
 }
 
 void MainWindow::scaleChanged(QAbstractButton *button)
@@ -84,6 +80,12 @@ void MainWindow::outputFileChanged(const  QString &s)
 
 void MainWindow::run()
 {
+    worker_->setScale(scale_);
+    qDebug() << input_filename_;
+    worker_->setInputFile(input_filename_);
+    worker_->setOutputFile(output_filename_);
+    worker_->setAlgorithm(algorithm_);
+
     //Emit the signal to run the working function
     emit operate();
 }
@@ -101,7 +103,7 @@ void MainWindow::inputFile()
 
 void MainWindow::outputFile()
 {
-    QString file = QFileDialog::getOpenFileName(this, "Open Video File", "", "All Files (*)");
+    QString file = QFileDialog::getSaveFileName(this, "Open Video File", "", "All Files (*)");
     outputFileChanged(file);
 }
 

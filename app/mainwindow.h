@@ -50,7 +50,7 @@ Q_SIGNALS:
     void operate();
 
 private:
-    Worker worker_;
+    Worker *worker_;
     QString input_filename_;
     QString output_filename_;
     QString algorithm_;
