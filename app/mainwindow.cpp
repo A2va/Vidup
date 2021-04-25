@@ -48,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     connect(worker_, &Worker::resultReady, this, &MainWindow::handleResults);
     //Start the thread 
     workerThread.start();
+    workerThread.setPriority(QThread::TimeCriticalPriority);
 
     ui->scale2->setChecked(true);
     scale_ = 2;

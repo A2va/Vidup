@@ -3,3 +3,5 @@
 /install
 /tests
 /models
+
+*.user

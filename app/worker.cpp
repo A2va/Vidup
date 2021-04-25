@@ -87,7 +87,7 @@ void Worker::doWork()
             {
                 sr.upsample(mat, mat_enc);
                 encoder.Matrix2Frame(mat_enc, frame_enc);
-
+                
                 frame_enc->pts = i; // Set presentation timestamp to current
 
                 encoder.writeVideoFrame(frame_enc);

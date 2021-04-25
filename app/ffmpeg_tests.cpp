@@ -305,7 +305,7 @@ void upscale()
     {
         int scale = 2;
         cv::dnn_superres::DnnSuperResImpl sr;
-        sr.readModel("./models/ESPCN_x2.pb");
+        sr.readModel("./models/espcn_x2.pb");
         sr.setModel("espcn", scale);
         FFmpegEncoder encoder(filename_out);
         FFmpegDecoder decoder(filename);
