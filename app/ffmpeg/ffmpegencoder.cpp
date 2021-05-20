@@ -149,8 +149,6 @@ AVFrame *FFmpegEncoder::createFrame()
 	frame->height = video_stream_->codecpar->height;
 	int error_code = av_image_alloc(frame->data, frame->linesize, frame->width, frame->height, static_cast<AVPixelFormat>(frame->format), 1);
 
-	char err[128];
-	av_strerror(error_code, err, 128);
 	if (error_code < 0)
 	{
 		throw FFmpegError("Encoder.createFrame: Could not alloc image", error_code);

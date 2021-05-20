@@ -364,7 +364,7 @@ int FFmpegDecoder::readPacketonStream(AVCodecContext *codec_ctx, AVStream *strea
 	{
 		AVPacket *front_pkt = fifo_packet_[stream->index].front();
 		// Move the data reference of front_pkt
-		// to pkt and reset front_pkt (av_packet_unref)
+		// to pkt and free front_pkt
 		av_packet_move_ref(pkt, front_pkt);
 		// Free front_packet
 		av_packet_free(&front_pkt);
@@ -439,7 +439,7 @@ int FFmpegDecoder::decode(AVCodecContext *codec_ctx, AVStream *stream, AVFrame *
 bool FFmpegDecoder::InitCodecContext(AVStream *stream, AVCodec **codec, AVCodecContext **codec_ctx)
 {
 	int error_code;
-	// Finde the code from stream
+	// Find the codec from stream
 	*codec = avcodec_find_decoder(stream->codecpar->codec_id);
 	if (!codec)
 	{
