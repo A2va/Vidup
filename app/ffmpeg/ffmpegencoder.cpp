@@ -47,6 +47,7 @@ bool FFmpegEncoder::Open()
 		return true;
 	}
 
+	// Alloc format context
 	error_code = avformat_alloc_output_context2(&fmt_ctx_, nullptr, nullptr, filename_.c_str());
 	if (error_code < 0)
 	{
@@ -54,6 +55,7 @@ bool FFmpegEncoder::Open()
 		return false;
 	}
 
+	// If codec exists, initialize stream
 	if (video_codec_ != nullptr)
 	{
 		InitializeStream(AVMEDIA_TYPE_VIDEO, &video_stream_, &video_codec_ctx_, video_codec_);
@@ -71,6 +73,7 @@ bool FFmpegEncoder::Open()
 		return false;
 	}
 
+	// Write the header
 	error_code = avformat_write_header(fmt_ctx_, nullptr);
 	if (error_code < 0)
 	{
@@ -123,9 +126,12 @@ void FFmpegEncoder::writeVideoPacket(AVPacket *pkt)
 
 void FFmpegEncoder::writeMatrix(cv::Mat &image, int64_t pts)
 {
+	// Get width, height and format of stream
 	frame_->format = static_cast<AVPixelFormat>(video_stream_->codecpar->format);
 	frame_->width = video_stream_->codecpar->width;
 	frame_->height = video_stream_->codecpar->height;
+
+	// Alloc image data
 	int error_code = av_image_alloc(frame_->data, frame_->linesize, frame_->width, frame_->height, static_cast<AVPixelFormat>(frame_->format), 1);
 
 	if (error_code < 0)
@@ -134,19 +140,26 @@ void FFmpegEncoder::writeMatrix(cv::Mat &image, int64_t pts)
 		return;
 	}
 
+	// Convert mat to frame
 	Matrix2Frame(image, frame_);
+	// Set frame pts
 	frame_->pts = pts;
+
+	// Write on stream
 	writeVideoFrame(frame_);
 	av_frame_unref(frame_);
 }
 
 AVFrame *FFmpegEncoder::createFrame()
 {
+	// Alloc the frame
 	AVFrame *frame = av_frame_alloc();
 	frame->format = static_cast<int>(video_stream_->codecpar->format);
 
+	// Set width and height
 	frame->width = video_stream_->codecpar->width;
 	frame->height = video_stream_->codecpar->height;
+	// Alloc image data
 	int error_code = av_image_alloc(frame->data, frame->linesize, frame->width, frame->height, static_cast<AVPixelFormat>(frame->format), 1);
 
 	if (error_code < 0)
@@ -160,7 +173,9 @@ AVFrame *FFmpegEncoder::createFrame()
 
 void FFmpegEncoder::Matrix2Frame(const cv::Mat &image, AVFrame *frame)
 {
-	const uint8_t *rgbData[1] = {(const uint8_t *)image.data};
+	// Get rgb data
+	const uint8_t *rgbData[1] = {static_cast<const uint8_t*>(image.data)};
+
 	int rgbLineSize[1] = {3 * image.cols};
 
 	sws_scale(sws_ctx_, rgbData, rgbLineSize, 0, image.rows, frame->data, frame->linesize);
@@ -168,9 +183,12 @@ void FFmpegEncoder::Matrix2Frame(const cv::Mat &image, AVFrame *frame)
 
 bool FFmpegEncoder::InitSwsContext()
 {
+	// Get width, height and format of stream
 	int width = video_stream_->codecpar->width;
 	int height = video_stream_->codecpar->height;
 	AVPixelFormat fmt = static_cast<AVPixelFormat>(video_stream_->codecpar->format);
+
+	// Alloc sws context
 	sws_ctx_ = sws_getContext(width, height, AV_PIX_FMT_BGR24, width, height, fmt, 0, NULL, NULL, NULL);
 	if (!sws_ctx_)
 	{
@@ -184,6 +202,7 @@ bool FFmpegEncoder::InitSwsContext()
 bool FFmpegEncoder::InitializeStream(AVMediaType type, AVStream **stream_ptr, AVCodecContext **codec_ctx_ptr, AVCodec *codec_ptr)
 {
 
+	// Alloc codec context
 	if (!InitializeCodecContext(stream_ptr, codec_ctx_ptr, codec_ptr))
 	{
 		return false;
@@ -195,19 +214,19 @@ bool FFmpegEncoder::InitializeStream(AVMediaType type, AVStream **stream_ptr, AV
 	switch (type)
 	{
 	case AVMEDIA_TYPE_VIDEO:
-		// codec_ctx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
-		// codec_ctx->time_base = av_make_q(1,25);
-		// codec_ctx->framerate = av_make_q(25,1);
-
+		// Set all codec param for video 
 		codec_ctx->width = codec_param_.width();
 		codec_ctx->height = codec_param_.height();
 		codec_ctx->bit_rate = codec_param_.bit_rate();
 		codec_ctx->time_base = codec_param_.time_base();
 		codec_ctx->framerate = codec_param_.framerate();
 		codec_ctx->pix_fmt = codec_param_.pix_fmt();
+
+		// codec_ctx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 		break;
 
 	case AVMEDIA_TYPE_AUDIO:
+		// Set all codec param for audio 
 		codec_ctx->sample_rate = codec_param_.sample_rate();
 		codec_ctx->channel_layout = codec_param_.channel_layout();
 		codec_ctx->channels = av_get_channel_layout_nb_channels(codec_ctx->channel_layout);
@@ -218,6 +237,7 @@ bool FFmpegEncoder::InitializeStream(AVMediaType type, AVStream **stream_ptr, AV
 		break;
 	}
 
+	// Set dict option to codec and open it
 	if (!SetupCodecContext(stream, codec_ctx, codec_ptr))
 	{
 		return false;
@@ -227,6 +247,7 @@ bool FFmpegEncoder::InitializeStream(AVMediaType type, AVStream **stream_ptr, AV
 
 void FFmpegEncoder::InitializeCodec()
 {
+	// If video codec id none the stream will be not created
 	if (codec_param_.video_codec_id() != AV_CODEC_ID_NONE)
 	{
 		video_codec_ = avcodec_find_encoder(codec_param_.video_codec_id());
@@ -235,7 +256,7 @@ void FFmpegEncoder::InitializeCodec()
 			throw FFmpegError("Encoder: Codec not found");
 		}
 	}
-
+	// If video codec id none the stream will be not created
 	if (codec_param_.audio_codec_id() != AV_CODEC_ID_NONE)
 	{
 		audio_codec_ = avcodec_find_encoder(codec_param_.audio_codec_id());
@@ -248,6 +269,7 @@ void FFmpegEncoder::InitializeCodec()
 
 bool FFmpegEncoder::InitializeCodecContext(AVStream **stream, AVCodecContext **codec_ctx, AVCodec *codec)
 {
+	// Create the new stream
 	*stream = avformat_new_stream(fmt_ctx_, nullptr);
 	if (!(*stream))
 	{
@@ -270,11 +292,13 @@ bool FFmpegEncoder::SetupCodecContext(AVStream *stream, AVCodecContext *codec_ct
 {
 	int error_code;
 
+	// If the flag exist, set it in the codec ctx
 	if (fmt_ctx_->oformat->flags & AVFMT_GLOBALHEADER)
 	{
 		codec_ctx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 	}
 	
+	// Set the thread for codec
 	AVDictionary *codec_opts = nullptr;
 	if(codec_param_.thread()==0)
 	{
@@ -310,6 +334,7 @@ void FFmpegEncoder::Close()
 		//Flush the encoder
 		encode(video_codec_ctx_, video_stream_, NULL);
 
+		// Write trailer and close io context
 		av_write_trailer(fmt_ctx_);
 		avio_closep(&fmt_ctx_->pb);
 
@@ -352,6 +377,7 @@ void FFmpegEncoder::writePktonStream(AVCodecContext *codec_ctx, AVStream *stream
 {
 	pkt_->stream_index = stream->index;
 
+	// Rescale the packet between codec ctx and stream time base
 	av_packet_rescale_ts(pkt_, codec_ctx->time_base, stream->time_base);
 
 	// Write packet to file

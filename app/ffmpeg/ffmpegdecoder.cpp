@@ -34,6 +34,8 @@ CodecParam FFmpegDecoder::getCodecParam()
 
 	if (video_codec_ctx_ != nullptr)
 	{
+
+		// Store all codec parameters
 		codec_param.width(video_codec_ctx_->width);
 		codec_param.height(video_codec_ctx_->height);
 		codec_param.framerate(video_codec_ctx_->framerate);
@@ -44,11 +46,13 @@ CodecParam FFmpegDecoder::getCodecParam()
 	}
 	else
 	{
+		// Set none codec
 		codec_param.video_codec_id(AV_CODEC_ID_NONE);
 	}
 
 	if(audio_codec_ctx_!= nullptr)
 	{
+		// Store all codec parameters
 		codec_param.sample_rate(audio_codec_ctx_->sample_rate);
 		codec_param.channel_layout(audio_codec_ctx_->channel_layout);
 		codec_param.sample_fmt(audio_codec_ctx_->sample_fmt);
@@ -56,6 +60,7 @@ CodecParam FFmpegDecoder::getCodecParam()
 	}
 	else
 	{
+		// Set none codec
 		codec_param.audio_codec_id(AV_CODEC_ID_NONE);
 	}
 
@@ -64,12 +69,14 @@ CodecParam FFmpegDecoder::getCodecParam()
 
 bool FFmpegDecoder::Open()
 {
+	// If already open
 	if (open_)
 	{
 		return true;
 	}
 
 	int error_code = 0;
+	// Open format context
 	error_code = avformat_open_input(&fmt_ctx_, filename_.c_str(), nullptr, nullptr);
 	if (error_code != 0)
 	{
@@ -77,6 +84,7 @@ bool FFmpegDecoder::Open()
 		return false;
 	}
 
+	// Find stream info in format ctx
 	error_code = avformat_find_stream_info(fmt_ctx_, nullptr);
 	if (error_code < 0)
 	{
@@ -101,7 +109,7 @@ bool FFmpegDecoder::Open()
 		}
 	}
 
-	// If video or audio founded init the codec context
+	// If video or audio founded, init the codec context
 	if (find_video_)
 	{
 		InitCodecContext(video_stream_, &video_codec_, &video_codec_ctx_);
