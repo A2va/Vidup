@@ -446,6 +446,7 @@ int FFmpegDecoder::decode(AVCodecContext *codec_ctx, AVStream *stream, AVFrame *
 
 bool FFmpegDecoder::InitCodecContext(AVStream *stream, AVCodec **codec, AVCodecContext **codec_ctx)
 {
+	// See: https://github.com/google/oboe/blob/e54d1305a8462f3746ab1fe44abc68a9597b94b6/samples/RhythmGame/src/main/cpp/audio/FFMpegExtractor.cpp#L149
 	int error_code;
 	// Find the codec from stream
 	*codec = avcodec_find_decoder(stream->codecpar->codec_id);
